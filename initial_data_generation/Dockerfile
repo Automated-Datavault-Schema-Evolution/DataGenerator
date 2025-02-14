@@ -8,11 +8,11 @@ WORKDIR /app
 COPY requirements.txt .
 COPY synthetic_data_generator.py .
 
-RUN apt update && apt install -y --no-install-recommends gcc \
- && pip install --upgrade pip \
- && pip install --no-cache-dir -r requirements.txt \
- && apt remove -y gcc \
- && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    gcc python3-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
+    && pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
 # Set environment variables
 ENV DATA_DIR="/data"
