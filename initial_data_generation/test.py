@@ -1,12 +1,14 @@
-import pandas as pd
-import numpy as np
-import os
 import multiprocessing as mp
-import time
-from faker import Faker
-from datetime import timedelta
+import os
 import random
+import time
+from datetime import timedelta
+
+import numpy as np
+import pandas as pd
+from faker import Faker
 from logger import log
+
 # Initialize Faker and set random seed
 fake = Faker(['it_IT', 'en_US', 'de_AT', 'de_DE', 'de_CH'])
 np.random.seed(42)
@@ -19,8 +21,9 @@ os.makedirs(final_output_dir, exist_ok=True)
 
 # Define chunk size and scaling factor
 chunk_size = 100000  # Number of rows per chunk
-scale_factor = 50    # Increase dataset size 50x
+scale_factor = 50  # Increase dataset size 50x
 num_customers = 2500  # Base number of customers
+
 
 # Function to save data in chunks
 def save_dataframe_in_chunks(df, filename, chunk_size):
@@ -29,6 +32,7 @@ def save_dataframe_in_chunks(df, filename, chunk_size):
     for i in range(num_chunks):
         chunk = df[i * chunk_size: (i + 1) * chunk_size]
         chunk.to_csv(f"{output_dir}/{filename}_part{i + 1}.csv", index=False)
+
 
 # Function to combine chunks into final dataset
 def combine_chunks(filename):
@@ -40,6 +44,7 @@ def combine_chunks(filename):
     combined_df = pd.concat([pd.read_csv(file) for file in files], ignore_index=True)
     combined_df.to_csv(f"{final_output_dir}/{filename}.csv", index=False)
     log.info(f"Final dataset '{filename}.csv' created successfully.")
+
 
 # ---------------------------
 # Dataset generation functions
@@ -94,7 +99,8 @@ def generate_customers(num_customers_large):
         save_dataframe_in_chunks(customers, "customers", chunk_size)
         log.info("Customers dataset generated in %.2f seconds.", time.time() - start_time)
     except Exception as e:
-        log.error("Error in generate_customers: %s", e)
+        log.critical("Error in generate_customers: %s", e)
+
 
 def generate_accounts(num_accounts_large, customer_ids):
     log.info("Start generating accounts")
@@ -133,6 +139,7 @@ def generate_accounts(num_accounts_large, customer_ids):
     except Exception as e:
         log.error("Error in generate_accounts: %s", e)
 
+
 def generate_transactions(num_transactions_large, account_ids):
     log.info("Start generating transactions")
     start_time = time.time()
@@ -167,6 +174,7 @@ def generate_transactions(num_transactions_large, account_ids):
     except Exception as e:
         log.error("Error in generate_transactions: %s", e)
 
+
 def generate_loans(num_loans_large, customer_ids):
     log.info("Start generating loans")
     start_time = time.time()
@@ -189,6 +197,7 @@ def generate_loans(num_loans_large, customer_ids):
         loans["CollateralValue"] = loans["CollateralType"].apply(
             lambda x: np.round(np.random.uniform(1000, 300000), 2) if x != "None" else 0.0
         )
+
         def get_subtype(loan_type):
             if loan_type == "Mortgage":
                 return np.random.choice(["Fixed", "Adjustable"])
@@ -200,15 +209,19 @@ def generate_loans(num_loans_large, customer_ids):
                 return np.random.choice(["Small Business", "Corporate"])
             else:
                 return "Standard"
+
         loans["LoanProductSubType"] = loans["LoanType"].apply(get_subtype)
-        loans["MonthlyPayment"] = np.round(loan_amounts / (loan_terms * 12) * np.random.uniform(0.9, 1.1, num_loans_large), 2)
-        loans["OutstandingBalance"] = loans.apply(lambda row: np.round(np.random.uniform(0, row["LoanAmount"]), 2), axis=1)
+        loans["MonthlyPayment"] = np.round(
+            loan_amounts / (loan_terms * 12) * np.random.uniform(0.9, 1.1, num_loans_large), 2)
+        loans["OutstandingBalance"] = loans.apply(lambda row: np.round(np.random.uniform(0, row["LoanAmount"]), 2),
+                                                  axis=1)
         loans["LoanPurpose"] = np.random.choice(
             ["Home Improvement", "Debt Consolidation", "Business Expansion", "Car Purchase", "Education", "Medical",
              "Vacation"],
             num_loans_large
         )
-        loans["LoanStartDate"] = pd.to_datetime(loans["ApprovalDate"]) + pd.to_timedelta(np.random.randint(0, 30, num_loans_large), unit='d')
+        loans["LoanStartDate"] = pd.to_datetime(loans["ApprovalDate"]) + pd.to_timedelta(
+            np.random.randint(0, 30, num_loans_large), unit='d')
         loans["LoanEndDate"] = loans.apply(
             lambda row: row["LoanStartDate"] + pd.DateOffset(years=int(row["LoanTermYears"])), axis=1)
         loans["LoanStartDate"] = loans["LoanStartDate"].dt.strftime('%Y-%m-%d')
@@ -218,6 +231,7 @@ def generate_loans(num_loans_large, customer_ids):
         log.info("Loans dataset generated in %.2f seconds.", time.time() - start_time)
     except Exception as e:
         log.error("Error in generate_loans: %s", e)
+
 
 def generate_branches(num_branches):
     log.info("Start generating branches")
@@ -247,6 +261,7 @@ def generate_branches(num_branches):
     except Exception as e:
         log.error("Error in generate_branches: %s", e)
 
+
 def generate_marketing(num_marketing, customer_ids):
     log.info("Start generating marketing")
     start_time = time.time()
@@ -273,6 +288,7 @@ def generate_marketing(num_marketing, customer_ids):
     except Exception as e:
         log.error("Error in generate_marketing: %s", e)
 
+
 def generate_digital_interactions(num_sessions, customer_ids):
     log.info("Start generating digital interactions")
     start_time = time.time()
@@ -295,6 +311,7 @@ def generate_digital_interactions(num_sessions, customer_ids):
     except Exception as e:
         log.error("Error in generate_digital_interactions: %s", e)
 
+
 def generate_risk_alerts(num_alerts, customer_ids):
     log.info("Start generating risk alerts")
     start_time = time.time()
@@ -315,6 +332,7 @@ def generate_risk_alerts(num_alerts, customer_ids):
         log.info("Risk alerts dataset generated in %.2f seconds.", time.time() - start_time)
     except Exception as e:
         log.error("Error in generate_risk_alerts: %s", e)
+
 
 def generate_shares(num_shares, customer_ids):
     log.info("Start generating shares")
@@ -354,6 +372,7 @@ def generate_shares(num_shares, customer_ids):
     except Exception as e:
         log.error("Error in generate_shares: %s", e)
 
+
 def generate_depots(num_depots, customer_ids):
     log.info("Start generating depots")
     start_time = time.time()
@@ -376,6 +395,7 @@ def generate_depots(num_depots, customer_ids):
     except Exception as e:
         log.error("Error in generate_depots: %s", e)
 
+
 def generate_aml_compliance(num_aml, customer_ids):
     log.info("Start generating AML compliance")
     start_time = time.time()
@@ -384,13 +404,15 @@ def generate_aml_compliance(num_aml, customer_ids):
         report_filed = np.random.choice([True, False], num_aml)
         filing_dates = []
         for filed in report_filed:
-            filing_dates.append(fake.date_between(start_date='-3y', end_date='today').strftime('%Y-%m-%d') if filed else "")
+            filing_dates.append(
+                fake.date_between(start_date='-3y', end_date='today').strftime('%Y-%m-%d') if filed else "")
         aml = pd.DataFrame({
             "AMLRecordID": aml_ids,
             "CustomerID": np.random.choice(customer_ids, num_aml),
             "Regulation": np.random.choice(["IFRS", "FATCA", "CRS"], num_aml),
             "ComplianceStatus": np.random.choice(["Compliant", "Non-Compliant", "Under Review"], num_aml),
-            "InvestigationStatus": np.random.choice(["Cleared", "Investigating", "Escalated", "Not Applicable"], num_aml),
+            "InvestigationStatus": np.random.choice(["Cleared", "Investigating", "Escalated", "Not Applicable"],
+                                                    num_aml),
             "SuspicionScore": np.round(np.random.uniform(0, 100, num_aml), 2),
             "ReportFiled": report_filed,
             "FilingDate": filing_dates,
@@ -405,6 +427,7 @@ def generate_aml_compliance(num_aml, customer_ids):
         log.info("AML compliance dataset generated in %.2f seconds.", time.time() - start_time)
     except Exception as e:
         log.error("Error in generate_aml_compliance: %s", e)
+
 
 # ---------------------------
 # Main execution
