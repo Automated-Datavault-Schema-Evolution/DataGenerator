@@ -1,3 +1,4 @@
 pandas
 numpy
 faker
+git+https://github.com/Automated-Datavault-Schema-Evolution/MyLogger.git@main#egg=mylogger
