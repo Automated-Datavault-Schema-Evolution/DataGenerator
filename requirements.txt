@@ -1,4 +1,5 @@
 pandas
 numpy
 faker
+python-dotenv
 git+https://github.com/Automated-Datavault-Schema-Evolution/MyLogger.git@v0.2.0
