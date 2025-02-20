@@ -6,9 +6,9 @@ from faker import Faker
 
 load_dotenv()
 
-SCALE_FACTOR = os.getenv('SCALE_FACTOR', 50)
-NUM_CUSTOMER = os.getenv('NUM_CUSTOMER', 2500)
-CHUNK_SIZE = os.getenv('CHUNK_SIZE', 1000)
+SCALE_FACTOR = int(os.getenv('SCALE_FACTOR', 50))
+NUM_CUSTOMER = int(os.getenv('NUM_CUSTOMER', 2500))
+CHUNK_SIZE = int(os.getenv('CHUNK_SIZE', 1000))
 
 DATA_DIR = os.getenv("DATA_DIR", "../data")
 os.makedirs(DATA_DIR, exist_ok=True)
