@@ -5,6 +5,7 @@ import time
 import numpy as np
 from logger import log
 
+from config import DATA_DIR, SCALE_FACTOR, NUM_CUSTOMER
 from generators.accounts_generator import generate_accounts
 from generators.aml_compliance_generator import generate_aml_compliance
 from generators.branches_generator import generate_branches
@@ -20,8 +21,8 @@ from generators.transaction_generator import generate_transactions
 from utils import combine_chunks
 
 # Configuration variables
-scale_factor = 50  # Increase dataset size 50x
-num_customers = 2500  # Base number of customers
+scale_factor = SCALE_FACTOR  # Increase dataset size 50x
+num_customers = NUM_CUSTOMER  # Base number of customers
 
 if __name__ == "__main__":
     total_start_time = time.time()

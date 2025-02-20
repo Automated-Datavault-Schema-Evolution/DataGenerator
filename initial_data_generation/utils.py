@@ -3,7 +3,7 @@ import os
 import pandas as pd
 from logger import log
 
-from config import DATA_DIR
+from config import DATA_DIR, CHUNK_SIZE
 
 # Directories for output
 OUTPUT_DIR = "synthetic_bank_data"
@@ -11,9 +11,6 @@ FINAL_OUTPUT_DIR = DATA_DIR
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 os.makedirs(FINAL_OUTPUT_DIR, exist_ok=True)
-
-# Define a default chunk size for saving files
-CHUNK_SIZE = 100000
 
 def save_dataframe_in_chunks(df, filename, chunk_size=CHUNK_SIZE):
     num_chunks = len(df) // chunk_size + (1 if len(df) % chunk_size != 0 else 0)
