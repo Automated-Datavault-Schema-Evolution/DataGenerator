@@ -13,7 +13,10 @@ CHUNK_SIZE = int(os.getenv('CHUNK_SIZE', 1000))
 DATA_DIR = os.getenv("DATA_DIR", "../data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
-# Create a shared Faker instance if desired.
+TEMP_DATA_DIR = os.getenv("TEMP_DATA_DIR", "synthetic_bank_data")
+# os.makedirs(TEMP_DATA_DIR, exist_ok=True)
+
+# Create a shared Faker instance
 fake = Faker(['it_IT', 'en_US', 'de_AT', 'de_DE', 'de_CH'])
 
 # Set a common random seed
