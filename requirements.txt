@@ -1,0 +1,5 @@
+pandas
+numpy
+faker
+python-dotenv
+git+ssh://git@github.com/Automated-Datavault-Schema-Evolution/MyLogger.git@v0.2.0#egg=mylogger

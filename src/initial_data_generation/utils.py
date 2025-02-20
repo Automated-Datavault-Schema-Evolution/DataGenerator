@@ -1,0 +1,30 @@
+import os
+
+import pandas as pd
+from logger import log
+
+from src.config.config import DATA_DIR, CHUNK_SIZE, TEMP_DATA_DIR
+
+# Directories for output
+TEMP_OUTPUT_DIR = TEMP_DATA_DIR
+FINAL_OUTPUT_DIR = DATA_DIR
+
+os.makedirs(TEMP_OUTPUT_DIR, exist_ok=True)
+os.makedirs(FINAL_OUTPUT_DIR, exist_ok=True)
+
+def save_dataframe_in_chunks(df, filename, chunk_size=CHUNK_SIZE):
+    num_chunks = len(df) // chunk_size + (1 if len(df) % chunk_size != 0 else 0)
+    log.debug("Saving %d chunks for %s", num_chunks, filename)
+    for i in range(num_chunks):
+        chunk = df[i * chunk_size: (i + 1) * chunk_size]
+        chunk.to_csv(f"{TEMP_OUTPUT_DIR}/{filename}_part{i + 1}.csv", index=False)
+
+def combine_chunks(filename):
+    files = [os.path.join(TEMP_OUTPUT_DIR, f) for f in os.listdir(TEMP_OUTPUT_DIR) if f.startswith(filename)]
+    log.debug("Found files for %s: %s", filename, files)
+    if not files:
+        log.warning("No files found for '%s'. Skipping combination.", filename)
+        return
+    combined_df = pd.concat([pd.read_csv(file) for file in files], ignore_index=True)
+    combined_df.to_csv(f"{FINAL_OUTPUT_DIR}/{filename}.csv", index=False)
+    log.info("Final dataset '%s.csv' created successfully.", filename)
