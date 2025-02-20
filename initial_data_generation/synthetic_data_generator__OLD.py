@@ -6,20 +6,17 @@ from datetime import timedelta
 
 import numpy as np
 import pandas as pd
-from faker import Faker
 from logger import log
 
-# Initialize Faker and set random seed
-fake = Faker(['it_IT', 'en_US', 'de_AT', 'de_DE', 'de_CH'])
-np.random.seed(42)
+from config import fake, DATA_DIR
 
 # Define directories for output
 output_dir = "synthetic_bank_data"
-final_output_dir = r"..\data"
+final_output_dir = DATA_DIR
 os.makedirs(output_dir, exist_ok=True)
 os.makedirs(final_output_dir, exist_ok=True)
 
-# Define chunk size and scaling factor
+# Define chunk size and scaling factor #TODO: refactor to use .env file
 chunk_size = 100000  # Number of rows per chunk
 scale_factor = 50  # Increase dataset size 50x
 num_customers = 2500  # Base number of customers

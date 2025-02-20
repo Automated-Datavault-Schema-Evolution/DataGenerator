@@ -7,7 +7,7 @@ import pandas as pd
 from dotenv import load_dotenv
 from logger import log
 
-from ..config import fake
+from config import fake
 
 load_dotenv()
 
