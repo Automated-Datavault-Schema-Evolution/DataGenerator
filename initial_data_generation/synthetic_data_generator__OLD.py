@@ -16,7 +16,7 @@ final_output_dir = DATA_DIR
 os.makedirs(output_dir, exist_ok=True)
 os.makedirs(final_output_dir, exist_ok=True)
 
-# Define chunk size and scaling factor #TODO: refactor to use .env file
+# Define chunk size and scaling factor
 chunk_size = 100000  # Number of rows per chunk
 scale_factor = 50  # Increase dataset size 50x
 num_customers = 2500  # Base number of customers
