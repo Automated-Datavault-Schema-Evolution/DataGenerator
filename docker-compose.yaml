@@ -26,7 +26,7 @@ services:
     container_name: data_automator
     depends_on:
       initial_data:
-        condition: service_healthy
+        condition: service_completed_successfully
     environment:
       - DATA_DIR=/app/data
     volumes:

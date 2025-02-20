@@ -1,4 +1,5 @@
 import multiprocessing as mp
+import os
 import time
 
 import numpy as np
@@ -66,5 +67,10 @@ if __name__ == "__main__":
                 "digital_interactions", "risk_alerts", "shares", "depots", "aml_compliance"]
     for dataset in datasets:
         combine_chunks(dataset)
+
+    marker = os.path.join(DATA_DIR, "initial_complete.flag")
+    with open(marker, "w") as f:
+        f.write("Initial data generation completed successfully.\n")
+    log.info("Initial data generation completed. Marker file created.")
 
     log.info("Multi-core data generation completed in %.2f seconds.", time.time() - total_start_time)

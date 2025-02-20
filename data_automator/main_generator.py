@@ -1,3 +1,4 @@
+import os
 import threading
 import time
 
@@ -39,5 +40,19 @@ def main():
     except KeyboardInterrupt:
         log.info("Main generator interrupted by user. Exiting...")
 
+
+def wait_for_initial_data(data_dir, marker_file, poll_interval=5):
+    marker_path = os.path.join(data_dir, marker_file)
+    log.info("Waiting for initial data marker: %s", marker_path)
+    while not os.path.exists(marker_path):
+        log.info("Initial data not ready yet. Sleeping for %d seconds...", poll_interval)
+        time.sleep(poll_interval)
+    log.info("Initial data detected. Proceeding with continuous data automator.")
+
+
 if __name__ == "__main__":
+    DATA_DIR = os.getenv("DATA_DIR", "/app/data")
+    wait_for_initial_data(DATA_DIR, "initial_complete.flag")
+    # Start the automator. Using os.execv or os.system is acceptable.
+    log.info("Starting main automator...")
     main()
