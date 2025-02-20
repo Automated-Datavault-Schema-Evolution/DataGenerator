@@ -34,7 +34,12 @@ def run_accounts_generator():
         else:
             max_id = 200000 - 1
         new_ids = np.arange(max_id + 1, max_id + 1 + batch_size)
-        opened_dates = [fake.date_between(start_date='-10y', end_date='today').strftime('%Y-%m-%d') for _ in range(batch_size)]
+        opened_dates_objs = [fake.date_between(start_date='-10y', end_date='today') for _ in range(batch_size)]
+        # Generate LastTransactionDate using the date objects
+        last_transaction_dates = [fake.date_between(start_date=d, end_date='today').strftime('%Y-%m-%d')
+                                  for d in opened_dates_objs]
+        # Now convert opened_dates to strings for CSV output
+        opened_dates = [d.strftime('%Y-%m-%d') for d in opened_dates_objs]
         new_accounts = pd.DataFrame({
             "AccountID": new_ids,
             "CustomerID": np.random.choice(customer_ids, batch_size),
@@ -47,7 +52,7 @@ def run_accounts_generator():
             "InterestRate": np.round(np.random.uniform(0.1, 5.0, batch_size), 2),
             "AccountSubType": np.random.choice(["Basic", "Premium", "Gold", "Platinum"], batch_size),
             "OverdraftLimit": np.round(np.random.uniform(0, 5000, batch_size), 2),
-            "LastTransactionDate": [fake.date_between(start_date=d, end_date='today').strftime('%Y-%m-%d') for d in opened_dates]
+            "LastTransactionDate": last_transaction_dates
         })
         log.debug("New accounts batch shape: %s", new_accounts.shape)
         if os.path.exists(ACCOUNTS_FILE):
