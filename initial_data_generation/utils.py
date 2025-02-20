@@ -3,13 +3,13 @@ import os
 import pandas as pd
 from logger import log
 
-from config import DATA_DIR, CHUNK_SIZE
+from config import DATA_DIR, CHUNK_SIZE, TEMP_DATA_DIR
 
 # Directories for output
-OUTPUT_DIR = "synthetic_bank_data"
+TEMP_OUTPUT_DIR = TEMP_DATA_DIR
 FINAL_OUTPUT_DIR = DATA_DIR
 
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+os.makedirs(TEMP_OUTPUT_DIR, exist_ok=True)
 os.makedirs(FINAL_OUTPUT_DIR, exist_ok=True)
 
 def save_dataframe_in_chunks(df, filename, chunk_size=CHUNK_SIZE):
@@ -17,10 +17,10 @@ def save_dataframe_in_chunks(df, filename, chunk_size=CHUNK_SIZE):
     log.debug("Saving %d chunks for %s", num_chunks, filename)
     for i in range(num_chunks):
         chunk = df[i * chunk_size: (i + 1) * chunk_size]
-        chunk.to_csv(f"{OUTPUT_DIR}/{filename}_part{i + 1}.csv", index=False)
+        chunk.to_csv(f"{TEMP_OUTPUT_DIR}/{filename}_part{i + 1}.csv", index=False)
 
 def combine_chunks(filename):
-    files = [os.path.join(OUTPUT_DIR, f) for f in os.listdir(OUTPUT_DIR) if f.startswith(filename)]
+    files = [os.path.join(TEMP_OUTPUT_DIR, f) for f in os.listdir(TEMP_OUTPUT_DIR) if f.startswith(filename)]
     log.debug("Found files for %s: %s", filename, files)
     if not files:
         log.warning("No files found for '%s'. Skipping combination.", filename)
