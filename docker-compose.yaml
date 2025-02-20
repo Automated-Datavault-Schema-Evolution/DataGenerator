@@ -1,10 +1,10 @@
-version: '3.8'
-
 services:
   initial_data:
     build:
       context: .
       dockerfile: Dockerfile.initial
+      ssh:
+        - default
     container_name: initial_data_generator
     restart: "no"
     environment:
@@ -21,6 +21,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.automator
+      ssh:
+        - default
     container_name: data_automator
     depends_on:
       initial_data:
