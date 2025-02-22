@@ -10,7 +10,7 @@ services:
     environment:
       - DATA_DIR=/app/data
     volumes:
-      - ../data:/app/data
+      - ${HOST_DATA_DIR}:/app/data
     healthcheck:
       test: ["CMD-SHELL", "test -f /app/data/customers.csv && test -f /app/data/accounts.csv"]
       interval: 10s
@@ -23,6 +23,8 @@ services:
       dockerfile: docker/Dockerfile.automator
       ssh:
         - default
+    env_file:
+      - .env
     container_name: data_automator
     depends_on:
       initial_data:
@@ -30,4 +32,4 @@ services:
     environment:
       - DATA_DIR=/app/data
     volumes:
-      - ../data:/app/data
+      - ${HOST_DATA_DIR}:/app/data
