@@ -1,4 +1,4 @@
-# Data Automator & Initial Data Generator
+# Initial Data Generator & Data Automator
 
 This project generates synthetic data for a banking data warehouse system. It consists of two main components:
 
@@ -12,13 +12,22 @@ Both components are containerized using Docker and orchestrated with Docker Comp
 Create a file named `.env` in the project root with content similar to the following. Adjust values as needed:
 
 ```dotenv
-# Host data directory on your local machine (absolute path)
-HOST_DATA_DIR=/mnt/nas/data
+# Docker configs
+COMPOSE_FILE=docker/docker-compose.yaml
 
-# Data directory inside the container (this is fixed to /app/data)
-DATA_DIR=/app/data
+# Host data directory
+HOST_DATA_DIR=C:\Users\<USER>\Desktop\repos\automated_datavault_schema_evolution\data
 
-# Customers generator thresholds (customers are updated infrequently)
+# Data directory
+DATA_DIR=../data
+TEMP_DATA_DIR= synthetic_bank_data
+
+# Initial data generator configs
+CHUNK_SIZE=100000
+SCALE_FACTOR=50
+NUM_CUSTOMER=2500
+
+# Customers generator thresholds
 MIN_SLEEP_TIME_CUSTOMERS=300
 MAX_SLEEP_TIME_CUSTOMERS=600
 MAX_BATCH_CUSTOMERS=100
@@ -38,7 +47,7 @@ MIN_SLEEP_TIME_MARKETING=120
 MAX_SLEEP_TIME_MARKETING=240
 MAX_BATCH_MARKETING=10
 
-# Digital interactions thresholds (sessions occur frequently)
+# Digital interactions thresholds
 MIN_SLEEP_TIME_DIGITAL=30
 MAX_SLEEP_TIME_DIGITAL=120
 MAX_BATCH_DIGITAL=200
@@ -63,9 +72,7 @@ MIN_SLEEP_TIME_AML=900
 MAX_SLEEP_TIME_AML=1800
 MAX_BATCH_AML=30
 
-# Base number of customers and scaling factor
-NUM_CUSTOMER=2500
-SCALE_FACTOR=50
+
 ```
 
 ## SSH Key Configuration
